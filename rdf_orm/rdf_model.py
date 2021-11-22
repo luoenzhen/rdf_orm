@@ -80,7 +80,11 @@ class RDFModel:
         # Set/reset g
         self._g = Graph()
 
-        self._g.add((self.uri, RDF.type, self.class_uri))
+        if isinstance(self.class_uri, list):
+            for type_item in self.class_uri:
+                self._g.add((self.uri, RDF.type, type_item))
+        else:
+            self._g.add((self.uri, RDF.type, self.class_uri))
         for key, rdf_property in self.mapping.items():
             value = getattr(self, key)
             # Check for optional values and skip if they are None.
