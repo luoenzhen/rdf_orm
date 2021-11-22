@@ -26,7 +26,7 @@ class RDFModel:
     uri: Union[URIRef, BNode]
 
     def __init__(self):
-        if self.class_uri is None:
+        if (not isinstance(self.class_uri, list) and self.class_uri is None) or (isinstance(self.class_uri, list) and len(self.class_uri) == 0):
             raise PropertyNotSetException(f'class_uri in {self.__class__.__name__} class is not defined.')
         if self.mapping is None:
             raise PropertyNotSetException(f'mapping in {self.__class__.__name__} class is not defined.')
@@ -80,6 +80,7 @@ class RDFModel:
         # Set/reset g
         self._g = Graph()
 
+        # Check if the class_uri contains multiple uris
         if isinstance(self.class_uri, list):
             for type_item in self.class_uri:
                 self._g.add((self.uri, RDF.type, type_item))
